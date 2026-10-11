@@ -1,0 +1,2 @@
+import {LegalDraft} from '@/components/legal-draft';
+export default function Terms(){return <LegalDraft title="Joining terms"><p>Draft scope: class eligibility, batch allocation, access to paid tutorials, student responsibilities, class changes, fees, and fair use of private lesson videos.</p><p>Rahul must approve the course rules, minimum ages, guardian consent requirements, class delivery obligations, and relevant consumer conditions before enrollment opens.</p></LegalDraft>}
