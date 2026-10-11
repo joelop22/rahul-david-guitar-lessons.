@@ -1,3 +1,7 @@
+# Separate admin update
+
+Read [ADMIN-SETUP.md](ADMIN-SETUP.md) to create the new owner user-ID/password login.
+
 # Rahul David Guitar Lessons — editable website
 
 This package contains the complete Next.js application, its images, database SQL,
@@ -45,9 +49,9 @@ Do not place server keys in public variables or commit `.env.local`.
 - Add the Supabase URL, public anonymous key and server service-role key to the
   host's environment. Set the Supabase site URL and permitted auth callback to
   your own domain (`https://YOUR-DOMAIN/auth/callback`).
-- Sign in as the owner, then set that confirmed account's profile role to
-  `owner` in the database. Never give owner access to every new signup.
-- `/admin` contains the public class-moments manager, review moderation,
+- For the separate owner login, follow `ADMIN-SETUP.md` and run
+  `npm run setup:admin`. This creates the user-ID/password owner account.
+- `/admin/login` is the dedicated owner sign-in; `/admin` contains the public class-moments manager, review moderation,
   travel quotes and private tutorial manager.
 
 ## Public class moments (not tutorial videos)

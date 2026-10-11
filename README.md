@@ -1,3 +1,7 @@
+# Dedicated admin login
+
+Owner sign-in is now at `/admin/login`, separate from student email sign-in. Run `npm run setup:admin` to choose a user ID and password. Read [ADMIN-SETUP.md](ADMIN-SETUP.md) first.
+
 # Full-screen studio update — 11 October 2026
 
 Start with [START-HERE.md](START-HERE.md) for setup, deployment, class clips, reviews and Google links. The application now includes an edge-to-edge fading hero, scroll-responsive capsule navigation, mobile swipe cards, class-moment uploads, moderated website reviews and a smooth review strip. No real student clips or reviews are seeded.

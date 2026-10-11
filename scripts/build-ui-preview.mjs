@@ -41,9 +41,20 @@ export default function JoinPage() { return <Suspense fallback={<main id="main-c
 `);
 await mkdir(path.join(preview, 'src/app/student/tutorials'), { recursive: true });
 await writeFile(path.join(preview, 'src/app/student/tutorials/page.tsx'), `export { default, metadata } from '../../login/page';\n`);
+await mkdir(path.join(preview, 'src/app/admin/login'), { recursive: true });
+await writeFile(path.join(preview, 'src/app/admin/login/page.tsx'), `
+import { AdminLoginView } from '@/components/admin-login-view';
+export const metadata = { title: 'Admin sign-in', robots: { index: false, follow: false } };
+export default function AdminLogin() { return <AdminLoginView configured={false}/>; }
+`);
+await writeFile(path.join(preview, 'src/app/admin/page.tsx'), `
+import Link from 'next/link';
+export const metadata = { title: 'Owner studio', robots: { index: false, follow: false } };
+export default function AdminGate() { return <main id="main-content" className="page-width page-intro"><p className="eyebrow">Owner studio</p><h1>Your teaching studio.</h1><p>Use the separate admin login in the configured application to manage your classes, videos and reviews.</p><Link className="button-primary mt-7" href="/admin/login">Admin sign-in</Link></main>; }
+`);
 // A public preview must never send authentication emails, admit students or
 // start a checkout, even if the local developer has configured credentials.
-const env = { ...process.env, NEXT_PUBLIC_SUPABASE_URL: '', NEXT_PUBLIC_SUPABASE_ANON_KEY: '', SUPABASE_SERVICE_ROLE_KEY: '', RAZORPAY_KEY_ID: '', RAZORPAY_KEY_SECRET: '', ADMISSIONS_ENABLED: 'false', COMMUNITY_ENABLED: 'false', NEXT_TELEMETRY_DISABLED: '1' };
+const env = { ...process.env, NEXT_PUBLIC_SUPABASE_URL: '', NEXT_PUBLIC_SUPABASE_ANON_KEY: '', SUPABASE_SERVICE_ROLE_KEY: '', RAZORPAY_KEY_ID: '', RAZORPAY_KEY_SECRET: '', ADMISSIONS_ENABLED: 'false', COMMUNITY_ENABLED: 'false', ADMIN_USER_ID: '', ADMIN_AUTH_EMAIL: '', ADMIN_AUTH_USER_ID: '', NEXT_TELEMETRY_DISABLED: '1' };
 const result = spawnSync(process.execPath, [path.join(root, 'node_modules/next/dist/bin/next'), 'build'], { cwd: preview, env, stdio: 'inherit' });
 if (result.status !== 0) process.exit(result.status || 1);
 await rm(path.join(root, 'dist'), { recursive: true, force: true });

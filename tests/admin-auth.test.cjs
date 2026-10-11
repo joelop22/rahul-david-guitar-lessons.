@@ -1,0 +1,23 @@
+const {test}=require('node:test');
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const ts=require('typescript');
+function load(path,mocks={}){const code=ts.transpileModule(fs.readFileSync(path,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2020}}).outputText;const m={exports:{}};new Function('require','module','exports',code)(id=>id in mocks?mocks[id]:require(id),m,m.exports);return m.exports;}
+Object.assign(process.env,{NEXT_PUBLIC_SUPABASE_URL:'https://test.supabase.co',NEXT_PUBLIC_SUPABASE_ANON_KEY:'public-test',SUPABASE_SERVICE_ROLE_KEY:'server-test',ADMIN_USER_ID:'test-admin',ADMIN_AUTH_EMAIL:'owner@example.test',ADMIN_AUTH_USER_ID:'owner-uuid'});
+const config=load('src/lib/admin-config.ts');
+const http={failure:(error,status=400)=>Response.json({error},{status}),noStore:(d,status=200)=>Response.json(d,{status}),parseJson:async r=>{try{return await r.json()}catch{return null}}};
+function supabase(ownerUser,role='owner'){
+ const seen=[];const client={from:()=>({select(){return this},eq(){return this},async maybeSingle(){return {data:{role},error:null}}})};
+ const module=load('src/lib/supabase.ts',{'./admin-config':config,'@supabase/supabase-js':{createClient:()=>client},'next/headers':{cookies:async()=>({getAll:()=>[],set:()=>{}})},'@supabase/ssr':{createServerClient:(url,key,options)=>{seen.push(options);return {auth:{getUser:async()=>({data:{user:options.cookieOptions?ownerUser:{id:'owner-uuid',email:'owner@example.test'}},error:null})}}}}});
+ return {module,seen};
+}
+test('Student session cannot authorize owner dashboard or admin APIs',async()=>{const s=supabase(null);assert.ok(await s.module.authenticatedUser());assert.equal(await s.module.requireOwner(),null);assert.equal(s.seen[1].cookieOptions.name,'rdgl-owner-auth');assert.equal(s.seen[1].cookieOptions.httpOnly,true)});
+test('Configured identity AND owner role are both required',async()=>{for(const [u,role] of [[{id:'other',email:'owner@example.test'},'owner'],[{id:'owner-uuid',email:'other@example.test'},'owner'],[{id:'owner-uuid',email:'owner@example.test'},'student']])assert.equal(await supabase(u,role).module.requireOwner(),null);assert.ok(await supabase({id:'owner-uuid',email:'owner@example.test'}).module.requireOwner())});
+function login(client,owner,ready=true){return load('src/app/api/admin/login/route.ts',{'@/lib/admin-config':{adminLoginConfigured:()=>ready},'@/lib/http':http,'@/lib/supabase':{ownerSessionClient:async()=>client,requireOwner:async()=>owner}})}
+function req(body,origin='https://studio.test'){return new Request('https://studio.test/api/admin/login',{method:'POST',headers:{origin,'Content-Type':'application/json'},body:JSON.stringify(body)})}
+const credentials={userId:'test-admin',password:'not-a-real-password'};
+test('Cross-origin requests and wrong user IDs never invoke password authentication',async()=>{const client=new Proxy({},{get(){throw Error('Unexpected authentication')}});const r=login(client,null);assert.equal((await r.POST(req(credentials,'https://other.test'))).status,403);assert.equal((await r.POST(req({...credentials,userId:'wrong'}))).status,401)});
+test('Valid password without owner authorization clears the separate session',async()=>{let cleared=false;const r=login({auth:{signInWithPassword:async()=>({error:null}),signOut:async({scope})=>{assert.equal(scope,'local');cleared=true;return {error:null}}}},null);assert.equal((await r.POST(req(credentials))).status,403);assert.equal(cleared,true)});
+test('Password authentication forwards configured email and requires authorization',async()=>{let supplied;const r=login({auth:{signInWithPassword:async d=>{supplied=d;return {error:null}}}},{id:'owner-uuid'});assert.equal((await r.POST(req(credentials))).status,200);assert.equal(supplied.email,'owner@example.test');assert.equal(supplied.password,credentials.password)});
+test('Wrong passwords and rate limits are handled without leaking account details',async()=>{for(const [status,expected] of [[400,401],[429,429]]){const r=login({auth:{signInWithPassword:async()=>({error:{status}})}},null);assert.equal((await r.POST(req(credentials))).status,expected)}});
+test('Admin sign-out uses local scope and same-origin protection',async()=>{let cleared=false;const r=load('src/app/api/admin/logout/route.ts',{'@/lib/http':http,'@/lib/supabase':{ownerSessionClient:async()=>({auth:{signOut:async({scope})=>{assert.equal(scope,'local');cleared=true;return {error:null}}}})}});assert.equal((await r.POST(req({}))).status,200);assert.equal(cleared,true);assert.equal((await r.POST(req({},'https://other.test'))).status,403)});
