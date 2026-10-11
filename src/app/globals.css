@@ -58,3 +58,20 @@
  .moment-copy{min-height:60px;padding:10px 16px}
  .moment-copy p{-webkit-line-clamp:1}
 }
+
+/* Student sign-in and account management. */
+.student-auth{max-width:440px}
+.auth-tabs{display:flex;gap:8px;padding:5px;border:1px solid var(--line);border-radius:50px;margin-bottom:24px}
+.auth-tabs button{flex:1;border:0;border-radius:50px;background:transparent;color:var(--muted);padding:12px;font:inherit;font-size:13px}
+.auth-tabs button[aria-pressed=true]{background:var(--surface);color:var(--text)}
+.auth-google{width:100%;gap:12px}
+.auth-divider{display:flex;align-items:center;gap:16px;margin:22px 0;font-size:12px;color:var(--muted)}
+.auth-divider:before,.auth-divider:after{content:'';height:1px;flex:1;background:var(--line)}
+.auth-password{position:relative}.auth-password input{padding-right:50px}
+.auth-password button{position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:0;color:var(--muted);padding:4px;display:flex}
+.auth-help{display:flex;flex-wrap:wrap;gap:16px;margin-top:20px;align-items:center}
+.auth-help>button{background:none;border:0;color:var(--accent);font:inherit;font-size:12px;padding:0;text-align:left}
+.student-account{max-width:760px}.student-account-forms{margin-top:30px}
+.account-panel{border-radius:25px;padding:28px;margin-top:20px}.account-panel h2{font-size:22px}
+.student-auth button:focus-visible,.student-account button:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
+@media(max-width:767px){.account-panel{padding:20px}.student-auth{max-width:none}}

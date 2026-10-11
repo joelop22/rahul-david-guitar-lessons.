@@ -54,7 +54,7 @@ export default function AdminGate() { return <main id="main-content" className="
 `);
 // A public preview must never send authentication emails, admit students or
 // start a checkout, even if the local developer has configured credentials.
-const env = { ...process.env, NEXT_PUBLIC_SUPABASE_URL: '', NEXT_PUBLIC_SUPABASE_ANON_KEY: '', SUPABASE_SERVICE_ROLE_KEY: '', RAZORPAY_KEY_ID: '', RAZORPAY_KEY_SECRET: '', ADMISSIONS_ENABLED: 'false', COMMUNITY_ENABLED: 'false', ADMIN_USER_ID: '', ADMIN_AUTH_EMAIL: '', ADMIN_AUTH_USER_ID: '', NEXT_TELEMETRY_DISABLED: '1' };
+const env = { ...process.env, NEXT_PUBLIC_GOOGLE_AUTH_ENABLED: 'true', NEXT_PUBLIC_SUPABASE_URL: '', NEXT_PUBLIC_SUPABASE_ANON_KEY: '', SUPABASE_SERVICE_ROLE_KEY: '', RAZORPAY_KEY_ID: '', RAZORPAY_KEY_SECRET: '', ADMISSIONS_ENABLED: 'false', COMMUNITY_ENABLED: 'false', ADMIN_USER_ID: '', ADMIN_AUTH_EMAIL: '', ADMIN_AUTH_USER_ID: '', NEXT_TELEMETRY_DISABLED: '1' };
 const result = spawnSync(process.execPath, [path.join(root, 'node_modules/next/dist/bin/next'), 'build'], { cwd: preview, env, stdio: 'inherit' });
 if (result.status !== 0) process.exit(result.status || 1);
 await rm(path.join(root, 'dist'), { recursive: true, force: true });

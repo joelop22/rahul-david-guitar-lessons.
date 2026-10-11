@@ -25,7 +25,7 @@ export default async function Tutorials() {
 
   return <>
     <main id="main-content" className="mx-auto max-w-7xl px-5 py-16 md:px-9 md:py-24">
-      <p className="eyebrow">Student library</p>
+      <p className="eyebrow">Student library</p><Link className="text-link" href="/student/account">Manage account</Link>
       <h1 className="section-title mt-5 text-[clamp(2.45rem,5vw,4rem)]">Your music.<br/><span className="text-[#edac50]">Your next lesson.</span></h1>
       <p className="body-muted mt-5 max-w-2xl text-sm sm:text-base">Continue learning with the guitar tutorials included in your enrollment.</p>
       <div className="mt-7 flex flex-wrap gap-2">{enrollments.map(e => <span key={e.course_id} className="border border-[#3b4554] bg-[#1e2935] px-4 py-2 text-xs font-medium text-[#dae6f7]">{Array.isArray(e.course) ? e.course[0]?.name : (e.course as {name:string} | null)?.name || 'Guitar course'} · Active</span>)}</div>
@@ -48,6 +48,7 @@ function Gate({ title, description, href, action }: { title: string; description
     <LockKeyhole className="mx-auto text-[#edac50]" size={32}/>
     <h1 className="section-title mt-6 text-4xl">{title}</h1>
     <p className="body-muted mt-5 text-sm">{description}</p>
+    <Link className="text-link mt-5" href="/student/account">Manage student account</Link>
     <Link className="button-primary mt-8" href={href}>{action} <ArrowRight size={16}/></Link>
   </main><Footer/></>;
 }
