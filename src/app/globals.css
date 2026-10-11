@@ -75,3 +75,14 @@
 .account-panel{border-radius:25px;padding:28px;margin-top:20px}.account-panel h2{font-size:22px}
 .student-auth button:focus-visible,.student-account button:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
 @media(max-width:767px){.account-panel{padding:20px}.student-auth{max-width:none}}
+
+/* Tutor introduction: dedicated portrait, separate from course photographs. */
+.tutor-section{grid-template-columns:minmax(0,.85fr) minmax(0,1fr)}
+.tutor-portrait{aspect-ratio:4/5;max-height:580px;width:100%}
+.tutor-monogram{width:100%;height:100%;display:grid;place-items:center;background:radial-gradient(ellipse at 50% 30%,#393126 0%,#242523 48%,#171a19 100%)}
+.tutor-monogram>span{font-size:clamp(90px,14vw,190px);font-weight:500;letter-spacing:-.08em;color:#edac50a6}
+.tutor-photo-caption{display:flex;flex-direction:column;gap:6px;padding:28px}
+.tutor-photo-caption strong{font-size:24px;font-weight:550}.tutor-photo-caption span{font-size:12px;color:#d8d9d4}
+.about-copy>.tutor-role{margin-top:8px!important;color:var(--accent)!important;font-size:16px!important}
+.tutor-location{display:flex;align-items:center;gap:8px;margin-top:22px;color:var(--muted);font-size:13px}
+@media(max-width:767px){.tutor-section{grid-template-columns:1fr;gap:28px}.tutor-portrait{width:min(100%,380px);max-height:440px;margin-inline:auto;aspect-ratio:4/5}.tutor-monogram>span{font-size:130px}.tutor-photo-caption{padding:24px}}
