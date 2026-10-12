@@ -52,6 +52,18 @@ import Link from 'next/link';
 export const metadata = { title: 'Owner studio', robots: { index: false, follow: false } };
 export default function AdminGate() { return <main id="main-content" className="page-width page-intro"><p className="eyebrow">Owner studio</p><h1>Your teaching studio.</h1><p>Use the separate admin login in the configured application to manage your classes, videos and reviews.</p><Link className="button-primary mt-7" href="/admin/login">Admin sign-in</Link></main>; }
 `);
+await mkdir(path.join(preview, 'src/app/enquire'), { recursive: true });
+await writeFile(path.join(preview, 'src/app/enquire/page.tsx'), `
+import { EnquiryView } from '@/components/enquiry-view';
+import { previewCourses } from '@/lib/catalog';
+export const metadata = { title: 'Enquire about guitar classes' };
+export default function Enquire() { return <EnquiryView configured={false} courses={previewCourses.map((c,i)=>({...c,id:'preview-'+i,is_active:true,batches:[]}))}/>; }
+`);
+await mkdir(path.join(preview, 'src/app/admin/students'), { recursive: true });
+await writeFile(path.join(preview, 'src/app/admin/students/page.tsx'), `
+import Link from 'next/link';
+export default function StudentsGate() { return <main className="page-width page-intro"><p className="eyebrow">Students</p><h1>Enquiries & students.</h1><p>Enquired and Taken records are available through the separate admin login on the configured website.</p><Link href="/admin/login" className="button-primary mt-7">Admin sign-in</Link></main>; }
+`);
 // A public preview must never send authentication emails, admit students or
 // start a checkout, even if the local developer has configured credentials.
 const env = { ...process.env, NEXT_PUBLIC_GOOGLE_AUTH_ENABLED: 'true', NEXT_PUBLIC_SUPABASE_URL: '', NEXT_PUBLIC_SUPABASE_ANON_KEY: '', SUPABASE_SERVICE_ROLE_KEY: '', RAZORPAY_KEY_ID: '', RAZORPAY_KEY_SECRET: '', ADMISSIONS_ENABLED: 'false', COMMUNITY_ENABLED: 'false', ADMIN_USER_ID: '', ADMIN_AUTH_EMAIL: '', ADMIN_AUTH_USER_ID: '', NEXT_TELEMETRY_DISABLED: '1' };
