@@ -23,6 +23,6 @@ export function Hero() {
   return <section ref={root} className="cinema-hero" aria-labelledby="hero-title">
     <div className="cinema-image"><SitePhoto image="hero" priority/></div><div className="cinema-shade"/>
     <div className="cinema-content page-width"><p className="eyebrow">Guitar lessons with Rahul David · Kochi</p><h1 id="hero-title">Find your<br/><span>sound.</span></h1><p className="cinema-subtitle">A chord. A rhythm. A song that’s yours.</p><div className="hero-actions"><a href="#courses" className="button-primary">Explore courses <ArrowUpRight size={20}/></a><Link href="/join" className="hero-admission">Apply for admission <ArrowUpRight size={17}/></Link></div></div>
-    <div className="hero-bottom page-width"><span>Online · In person · At home</span><a href="#courses" aria-label="Scroll to courses"><ArrowDown size={17}/> Scroll to explore</a></div>
+    <div className="hero-bottom page-width"><span>Online · Offline · At home</span><a href="#courses" aria-label="Scroll to courses"><ArrowDown size={17}/> Scroll to explore</a></div>
   </section>;
 }
