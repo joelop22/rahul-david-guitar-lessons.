@@ -86,3 +86,14 @@
 .about-copy>.tutor-role{margin-top:8px!important;color:var(--accent)!important;font-size:16px!important}
 .tutor-location{display:flex;align-items:center;gap:8px;margin-top:22px;color:var(--muted);font-size:13px}
 @media(max-width:767px){.tutor-section{grid-template-columns:1fr;gap:28px}.tutor-portrait{width:min(100%,380px);max-height:440px;margin-inline:auto;aspect-ratio:4/5}.tutor-monogram>span{font-size:130px}.tutor-photo-caption{padding:24px}}
+
+/* Class enquiries and the private student contact list. */
+.enquiry-honeypot{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+.students-tabs{max-width:430px}.students-count{display:inline-block;margin-left:14px;font-size:14px;color:var(--accent)}
+.student-enquiry-list{display:grid;gap:18px;margin-top:25px}.enquiry-record{padding:25px;border-radius:25px}
+.enquiry-record-head{display:flex;justify-content:space-between;align-items:start;gap:16px}.enquiry-record h3{font-size:22px}.enquiry-record-head p,.enquiry-record-head>span{font-size:12px;color:var(--muted);margin-top:8px}
+.enquiry-record details{margin-top:20px}.enquiry-record summary{cursor:pointer;color:var(--accent);font-size:13px}
+.enquiry-record dl{margin-top:16px}.enquiry-record dl>div{display:grid;grid-template-columns:180px 1fr;gap:14px;padding:10px 0;border-bottom:1px solid var(--line);font-size:13px;line-height:1.7}
+.enquiry-record dt{color:var(--muted)}.enquiry-record dd{white-space:pre-wrap;overflow-wrap:anywhere}
+.enquiry-record .enquiry-status-button{border:1px solid var(--line);padding:12px 18px;border-radius:50px}
+@media(max-width:767px){.enquiry-record{padding:20px}.enquiry-record-head{flex-direction:column;gap:4px}.enquiry-record dl>div{grid-template-columns:1fr;gap:2px}}
