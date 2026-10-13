@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import {LearningCounter} from '@/components/learning-counter';
 import { Hero } from '@/components/hero';
 import { Community } from '@/components/community';
 import { ArrowRight, ArrowUpRight, Plus } from 'lucide-react';
@@ -20,6 +21,7 @@ export default function Home() {
     <section id="courses" className="courses-section" aria-labelledby="courses-title"><div className="section-heading"><h2 id="courses-title">A course for every stage.</h2><Link className="quiet-link desktop-only" href="/courses">All courses <ArrowUpRight size={17}/></Link></div><div className="course-grid">{previewCourses.map(course => <CourseCard key={course.slug} title={course.name} slug={course.slug}/>)}</div></section>
     <LessonFormats/>
     <TutorProfile/>
+    <LearningCounter/>
     <Community enabled={Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY && process.env.COMMUNITY_ENABLED === 'true')}/>
     <section className="faq-section section-space"><div><p className="eyebrow">Before your first chord</p><h2>A few good questions.</h2><p>Something else on your mind?<br/><a href="https://wa.me/917994357541?text=Hello%20Rahul%2C%20I%20have%20a%20question%20about%20guitar%20lessons." target="_blank" rel="noopener noreferrer" className="text-link">Ask Rahul <ArrowUpRight size={15}/></a></p></div><div className="faq-list">{faqs.map(([q,a]) => <details key={q}><summary>{q}<Plus size={18} aria-hidden="true"/></summary><p>{a}</p></details>)}</div></section>
     <section className="closing-panel"><div><p className="eyebrow">Your next chapter sounds good</p><h2>Let’s start with a chord.</h2><p>Choose a course. Find your rhythm.</p></div><Link className="button-primary" href="/join">Apply for admission <ArrowRight size={19}/></Link></section>
