@@ -14,6 +14,6 @@ export async function POST(request:Request){
   if(result.error){if(result.error.status===429)return failure('Too many attempts. Please try again later.',429);return failure('Incorrect user ID or password.',401);}
   // Password success is not enough: enforce configured identity AND owner role.
   if(!await requireOwner()){await client.auth.signOut({scope:'local'});return failure('This account does not have admin access.',403);}
-  return noStore({redirect:'/admin'});
+  return noStore({redirect:'/admin/students'});
  }catch{return failure('Unable to sign in. Check the Supabase connection and try again.',503);}
 }
