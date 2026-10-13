@@ -1,0 +1,5 @@
+'use client';
+import {useEffect,useState} from 'react';
+import {studentNext} from '@/lib/student-auth';
+export default function Complete(){const [claimed,setClaimed]=useState(false),[next,setNext]=useState('/student/dashboard');useEffect(()=>{const destination=studentNext(new URLSearchParams(location.search).get('next'));setNext(destination);let channel:BroadcastChannel|undefined,accepted=false;try{channel=new BroadcastChannel('rdgl-email-login');channel.onmessage=event=>{if(event.data?.type==='original-tab-ready'){accepted=true;setClaimed(true);}};channel.postMessage({type:'email-verified'});}catch{}const timer=setTimeout(()=>{if(!accepted)window.location.replace(destination);},1600);return()=>{clearTimeout(timer);channel?.close();};},[]);
+ return <main id="main-content" className="page-width page-intro"><p className="eyebrow">RahulDavidGuitarLessons</p><h1>You’re signed in.</h1><p>{claimed?'Your original website tab is ready. Return to it; you can close this confirmation tab.':'Opening your student space…'}</p><a href={next} className="button-secondary mt-7">Continue in this tab</a></main>;}
