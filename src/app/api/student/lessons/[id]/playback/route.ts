@@ -1,3 +1,4 @@
+import {canAccessCourse} from '@/lib/portal-server';
 import {NextResponse} from 'next/server';
 import {adminClient,authenticatedUser,configured} from '@/lib/supabase';
 import {failure} from '@/lib/http';
@@ -8,8 +9,7 @@ export async function GET(_request:Request,{params}:{params:Promise<{id:string}>
  const {data:lesson}=await db.from('tutorial_lessons').select('video_key,is_published,module:tutorial_modules(course_id,is_published)').eq('id',id).maybeSingle();
  const lessonModule=Array.isArray(lesson?.module)?lesson?.module[0]:lesson?.module;
  if(!lesson?.is_published||!lessonModule?.is_published)return failure('Lesson not found',404);
- const {data:e}=await db.from('enrollments').select('id').eq('profile_id',user.id).eq('course_id',lessonModule.course_id).eq('status','active').limit(1).maybeSingle();
- if(!e)return failure('A paid enrollment is required',403);
+ if(!await canAccessCourse(user.id,lessonModule.course_id))return failure('Active course access is required',403);
  const {data,error}=await db.storage.from('tutorial-videos').createSignedUrl(lesson.video_key,1800);
  if(error||!data?.signedUrl)return failure('Private video is not available',404);
  return NextResponse.json({url:data.signedUrl},{headers:{'Cache-Control':'no-store, private'}});
