@@ -23,6 +23,6 @@ export function VideoPlayer({ lessonId }: { lessonId: string }) {
   return <div className="mt-10 overflow-hidden rounded-xl border border-[#343737] bg-[#1c1e1e]">
     {url ? <video controls controlsList="nodownload" playsInline src={url} className="aspect-video w-full bg-black">Your browser does not support video playback.</video>
       : <div className="flex aspect-video items-center justify-center p-8 text-center text-sm text-[#c0c5cb]">{error || 'Preparing private video playback…'}</div>}
-    <p className="p-5 text-xs leading-6 text-[#8e959c]">Lesson playback is linked to your paid enrollment. Video links expire automatically. Please don’t share course content.</p>
+    <p className="p-5 text-xs leading-6 text-[#8e959c]">Lesson playback is linked to your active course access. Video links expire automatically. Please don’t share course content.</p>
   </div>;
 }

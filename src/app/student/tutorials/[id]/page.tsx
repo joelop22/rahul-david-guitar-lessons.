@@ -1,3 +1,5 @@
+import {canAccessCourse} from '@/lib/portal-server';
+import {LessonCompletion} from '@/components/portal/lesson-completion';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
@@ -17,8 +19,8 @@ export default async function LessonPage({ params }: { params: Promise<{ id: str
   if (!lesson || !lesson.is_published) notFound();
   const lessonModule = Array.isArray(lesson.module) ? lesson.module[0] : lesson.module;
   if (!lessonModule || !lessonModule.is_published) notFound();
-  const { data: enrollment } = await db.from('enrollments').select('id').eq('profile_id', user.id).eq('course_id', lessonModule.course_id).eq('status', 'active').limit(1).maybeSingle();
-  if (!enrollment) redirect('/student/tutorials');
+  if (!await canAccessCourse(user.id,lessonModule.course_id)) redirect('/student/tutorials');
+  const {data:progress}=await db.from('lesson_progress').select('completed_at').eq('profile_id',user.id).eq('lesson_id',id).maybeSingle();
 
   return <>
     <main id="main-content" className="mx-auto max-w-5xl px-5 py-12 md:px-9 md:py-20">
@@ -26,7 +28,7 @@ export default async function LessonPage({ params }: { params: Promise<{ id: str
       <p className="eyebrow mt-12">{lessonModule.title}</p>
       <h1 className="section-title mt-4 text-4xl md:text-5xl">{lesson.title}</h1>
       {lesson.description && <p className="body-muted mt-5 max-w-2xl text-sm sm:text-base">{lesson.description}</p>}
-      <VideoPlayer lessonId={lesson.id}/>
+      <VideoPlayer lessonId={lesson.id}/><LessonCompletion lessonId={lesson.id} completed={!!progress?.completed_at}/>
     </main>
     <Footer />
   </>;
