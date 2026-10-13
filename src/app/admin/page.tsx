@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import {StudentsManager} from './students/students-manager';
 import { AdminSignOut } from './sign-out';
 import { CommunityManager } from './community-manager';
 import { communityReady } from '@/lib/community-server';
@@ -26,6 +27,7 @@ export default async function Admin() {
       <h1 className="section-title mt-4 text-4xl md:text-5xl">Your teaching studio.</h1>
       <p className="body-muted mt-5 max-w-2xl text-sm sm:text-base">Organise your guitar tutorials into modules and upload short private video lessons. Only paid students enrolled in the corresponding course can play published lessons.</p>
       <Link href="/admin/students" className="button-primary mt-7">Students · Enquired &amp; Taken</Link>
+      <h2 className="section-title mt-10">Student enquiries</h2><StudentsManager/>
       <CommunityManager enabled={communityReady()}/>
       <h2 className="section-title mt-10">Private tutorials</h2>
       <TravelQuotes quotes={quotes || []}/>
