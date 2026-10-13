@@ -1,3 +1,4 @@
+import {canAccessCourse} from '@/lib/portal-server';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowRight, BookOpen, LockKeyhole, PlayCircle } from 'lucide-react';
@@ -13,8 +14,14 @@ export default async function Tutorials() {
   if (!configured()) return <Gate title="Tutorial access is being set up." description="The learning portal isn't connected yet. You can explore the public courses in the meantime." href="/courses" action="View courses"/>;
 
   const db = adminClient();
-  const { data: enrollments } = await db.from('enrollments').select('course_id,status,course:courses(name)').eq('profile_id', user.id).eq('status', 'active');
-  if (!enrollments?.length) return <Gate title="No active courses yet." description="Once your class payment is verified, your enrolled course tutorials will appear here." href="/join" action="Join a class"/>;
+  const { data: paidEnrollments } = await db.from('enrollments').select('course_id,status,course:courses(name)').eq('profile_id', user.id).eq('status', 'active');
+  const {data:student}=await db.from('portal_students').select('id').eq('account_id',user.id).maybeSingle();
+  const {data:manual}=student?await db.from('portal_courses').select('course_id,course:courses(name)').eq('student_id',student.id).eq('access_status','active'):{data:[]};
+  const combined=[...(paidEnrollments||[]),...(manual||[])];
+  const unique=combined.filter((e,i)=>combined.findIndex(v=>v.course_id===e.course_id)===i);
+  const permissions=await Promise.all(unique.map(e=>canAccessCourse(user.id,e.course_id)));
+  const enrollments=unique.filter((_,i)=>permissions[i]);
+  if (!enrollments?.length) return <Gate title="No active courses yet." description="Once Rahul activates your course access, its tutorials will appear here." href="/join" action="Join a class"/>;
 
   const courseIds = enrollments.map(e => e.course_id);
   const { data: modules } = await db.from('tutorial_modules').select('id,title,description,course_id,sort_order,course:courses(name)').in('course_id', courseIds).eq('is_published', true).order('sort_order');
@@ -25,7 +32,7 @@ export default async function Tutorials() {
 
   return <>
     <main id="main-content" className="mx-auto max-w-7xl px-5 py-16 md:px-9 md:py-24">
-      <p className="eyebrow">Student library</p><Link className="text-link" href="/student/account">Manage account</Link>
+      <p className="eyebrow">Student library</p><Link className="text-link" href="/student/dashboard">Student dashboard</Link>
       <h1 className="section-title mt-5 text-[clamp(2.45rem,5vw,4rem)]">Your music.<br/><span className="text-[#edac50]">Your next lesson.</span></h1>
       <p className="body-muted mt-5 max-w-2xl text-sm sm:text-base">Continue learning with the guitar tutorials included in your enrollment.</p>
       <div className="mt-7 flex flex-wrap gap-2">{enrollments.map(e => <span key={e.course_id} className="border border-[#3b4554] bg-[#1e2935] px-4 py-2 text-xs font-medium text-[#dae6f7]">{Array.isArray(e.course) ? e.course[0]?.name : (e.course as {name:string} | null)?.name || 'Guitar course'} · Active</span>)}</div>
