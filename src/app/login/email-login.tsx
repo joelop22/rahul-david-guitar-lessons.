@@ -7,7 +7,7 @@ type Mode='login'|'signup'|'reset'|'link';
 export function EmailLogin({configured=false,googleEnabled=false}:{configured?:boolean;googleEnabled?:boolean}){
  const [mode,setMode]=useState<Mode>('login'),[identifier,setIdentifier]=useState(''),[password,setPassword]=useState(''),[confirm,setConfirm]=useState(''),[show,setShow]=useState(false),[busy,setBusy]=useState(false),[status,setStatus]=useState('');
  useEffect(()=>{if(new URLSearchParams(window.location.search).has('error'))setStatus('Sign-in could not be completed. Please try again.');},[]);
- function destination(){return studentNext(new URLSearchParams(window.location.search).get('next'));}
+ function destination(){return studentNext(new URLSearchParams(window.location.search).get('next')||'/student/dashboard');}
  function callback(next:string){return `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}`;}
  function change(next:Mode){setMode(next);setStatus('');setPassword('');setConfirm('');}
  async function submit(event:React.FormEvent<HTMLFormElement>){
