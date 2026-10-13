@@ -64,6 +64,12 @@ await writeFile(path.join(preview, 'src/app/admin/students/page.tsx'), `
 import Link from 'next/link';
 export default function StudentsGate() { return <main className="page-width page-intro"><p className="eyebrow">Students</p><h1>Enquiries & students.</h1><p>Enquired and Taken records are available through the separate admin login on the configured website.</p><Link href="/admin/login" className="button-primary mt-7">Admin sign-in</Link></main>; }
 `);
+await mkdir(path.join(preview, 'src/app/student/dashboard'), { recursive: true });
+await writeFile(path.join(preview, 'src/app/student/dashboard/page.tsx'), `
+import Link from 'next/link';
+export default function DashboardGate(){return <main className="page-width page-intro"><p className="eyebrow">Student studio</p><h1>Your learning journey.</h1><p>Your private profile, practice tasks, tutor feedback and certificates appear after Rahul connects your student account.</p><Link className="button-primary mt-7" href="/login">Student sign-in</Link></main>;}
+`);
+await rm(path.join(preview, 'src/app/certificates'), { recursive: true, force: true });
 // A public preview must never send authentication emails, admit students or
 // start a checkout, even if the local developer has configured credentials.
 const env = { ...process.env, NEXT_PUBLIC_GOOGLE_AUTH_ENABLED: 'true', NEXT_PUBLIC_SUPABASE_URL: '', NEXT_PUBLIC_SUPABASE_ANON_KEY: '', SUPABASE_SERVICE_ROLE_KEY: '', RAZORPAY_KEY_ID: '', RAZORPAY_KEY_SECRET: '', ADMISSIONS_ENABLED: 'false', COMMUNITY_ENABLED: 'false', ADMIN_USER_ID: '', ADMIN_AUTH_EMAIL: '', ADMIN_AUTH_USER_ID: '', NEXT_TELEMETRY_DISABLED: '1' };
